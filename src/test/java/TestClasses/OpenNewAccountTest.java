@@ -44,16 +44,16 @@ public class OpenNewAccountTest extends BasicPageClasses {
 		softAssert.assertAll();
 	}
 
-	@Test
-	public void Open_NewAccount() throws InterruptedException {
+	@Test(dataProvider = "getData")
+	public void Open_NewAccount(Hashtable<String, String> dataTable) throws InterruptedException {
 		loginPage = login();
 		accountsoverviewPage = loginPage.User_Credentials("Pinky", "Pinky");
 		accountsoverviewPage.AccountOver();
 		leftmenuClass=accountsoverviewPage.getletfmenu();
-
+		leftmenuClass.LogOut();
 	}
 
-	@Test(dependsOnMethods = "Open_NewAccount")
+	//@Test(dependsOnMethods = "Open_NewAccount")
 	public void LogOut() {
 		leftmenuClass.LogOut();
 	}
