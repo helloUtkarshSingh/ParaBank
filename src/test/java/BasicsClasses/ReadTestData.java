@@ -1,47 +1,53 @@
 package BasicsClasses;
 
+import java.util.Hashtable;
+
 public class ReadTestData {
 
-	public static void main(String[] args) {
+	public static Object[][] SendExcelData(String DataFile,String SheatName, String TestName) {
 		// TODO Auto-generated method stub
 		ReadExcelFile readData = new ReadExcelFile(
-				System.getProperty("user.dir") + "\\src\\test\\java\\TestData\\ParaBank.xlsx");
-		String sheetName = "LoginTest";
-		String testName = "Update Contact Info";
+				System.getProperty("user.dir") + "\\src\\test\\java\\TestData\\"+DataFile);
+		String sheetName = SheatName;
+		String testName = TestName;
 
 		// ******************Find Start Row of TestCase******************
 		int StartRow = 0; // FileName column
 		while (!readData.getCellData(sheetName, 0, StartRow).equalsIgnoreCase(testName)) {
 			StartRow++;
 		}
-		System.out.println("Test Start from Row Number: " + StartRow);
 
 		int startTestColum = StartRow + 1;
 		int startTestRow = StartRow + 2;
 
-		System.out.println("startTestColum: " + startTestColum);
-		System.out.println("startTestRow: " + startTestRow);
-
 		// ******************Find Number of Rows of TestCase******************
-		int rows = 0;
-		while (!readData.getCellData(sheetName, 0, startTestRow + rows).equals("")) {
-			rows++;
+		int totalrows = 0;
+		while (!readData.getCellData(sheetName, 0, startTestRow + totalrows).equals("")) {
+			totalrows++;
 		}
-		System.out.println("Total number of Row in test: " + testName + " is: " + rows);
 
 		// Find Number of Cols of TestCase
-		int cols = 0;
-		while (!readData.getCellData(sheetName, cols, startTestColum).equals("")) {
-			cols++;
+		int totalcols = 0;
+		while (!readData.getCellData(sheetName, totalcols, startTestColum).equals("")) {
+			totalcols++;
 		}
-		System.out.println("Test Start from Columns Number: " + cols);
-		System.out.println("colNumber:- "+cols+" rowNumber:- "+startTestRow);
-		for (int rowNumber = startTestRow; rowNumber < StartRow + rows; rowNumber++) {
-			for (int colNumber = 0; colNumber < cols; colNumber++) {
-				System.out.println(readData.getCellData(sheetName, colNumber, rowNumber));
-			}
 
+		//To Return Data to the Test
+		Object[][] dataset= new Object[totalrows][1];
+		Hashtable<String, String> dataTable = null;
+		int dataRowNumber = 0;
+		for (int rowNumber = startTestRow; rowNumber <= startTestColum + totalrows; rowNumber++) {
+			dataTable = new Hashtable<String, String>();
+			for (int colNumber = 0; colNumber < totalcols; colNumber++) {
+				String key = readData.getCellData1(sheetName, colNumber, startTestColum);
+				String value = readData.getCellData1(sheetName, colNumber, rowNumber);
+				dataTable.put(key, value);
+				
+			}
+			dataset[dataRowNumber][0] = dataTable;
+			dataRowNumber++;
 		}
+		return dataset;
 	}
 
 }
